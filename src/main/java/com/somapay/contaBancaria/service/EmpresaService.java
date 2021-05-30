@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.somapay.contaBancaria.model.Empresa;
 import com.somapay.contaBancaria.repository.EmpresaRepository;
+import com.somapay.contaBancaria.utils.ValidatorUtils;
 
 @Service
 public class EmpresaService {
@@ -14,7 +15,10 @@ public class EmpresaService {
 	@Autowired
 	private EmpresaRepository empresaRepository;
 	
-	public Empresa salvar(Empresa empresa) {
+	public Empresa salvar(Empresa empresa) throws Exception {
+		if(!ValidatorUtils.verificarSeCnpjValido(empresa.getCnpj())) {
+			throw new Exception("Número de CNPJ inválido");
+		}
 		return empresaRepository.save(empresa);
 	}
 	

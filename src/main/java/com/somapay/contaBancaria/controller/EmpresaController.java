@@ -21,7 +21,7 @@ public class EmpresaController {
 	private EmpresaService empresaService;
 
 	@PostMapping
-	public ResponseEntity<Empresa> salvar(@RequestBody Empresa empresa) {
+	public ResponseEntity<Empresa> salvar(@RequestBody Empresa empresa) throws Exception {
 		return new ResponseEntity<Empresa>(empresaService.salvar(empresa), HttpStatus.OK);
 	}
 	
