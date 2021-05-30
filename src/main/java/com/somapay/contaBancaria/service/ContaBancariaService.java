@@ -1,11 +1,13 @@
 package com.somapay.contaBancaria.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.somapay.contaBancaria.model.ContaBancaria;
+import com.somapay.contaBancaria.model.Empresa;
 import com.somapay.contaBancaria.repository.ContaBancariaRepository;
 
 @Service
@@ -33,5 +35,9 @@ public class ContaBancariaService {
 			}
 		}
 		return contaBancariaRepository.save(contaBancaria);
+	}
+	
+	public List<ContaBancaria> buscarTodasContasBancarias() {
+		return contaBancariaRepository.findAll();
 	}
 }
