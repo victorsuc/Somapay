@@ -7,5 +7,6 @@ import com.somapay.contaBancaria.model.Funcionario;
 
 @Repository
 public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> {
+	public boolean existsByCpfAndEmpresaId(String cpf, Long idEmpresa);
 
 }
