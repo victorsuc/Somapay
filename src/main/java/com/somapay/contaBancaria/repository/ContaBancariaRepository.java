@@ -7,5 +7,6 @@ import com.somapay.contaBancaria.model.ContaBancaria;
 
 @Repository
 public interface ContaBancariaRepository extends JpaRepository<ContaBancaria, Long>{
-	
+	public boolean existsByEmpresaId(long idEmpresa);
+	public boolean existsByFuncionarioId(long idFuncionario);
 }
