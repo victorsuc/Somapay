@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.somapay.contaBancaria.dto.SaldoContaBancariaDto;
 import com.somapay.contaBancaria.model.ContaBancaria;
-import com.somapay.contaBancaria.model.Empresa;
 import com.somapay.contaBancaria.repository.ContaBancariaRepository;
 
 @Service
@@ -39,5 +39,9 @@ public class ContaBancariaService {
 	
 	public List<ContaBancaria> buscarTodasContasBancarias() {
 		return contaBancariaRepository.findAll();
+	}
+	
+	public SaldoContaBancariaDto buscarSaldoEmpresaBy(long idEmpresa) {
+		return contaBancariaRepository.findByEmpresaId(idEmpresa);
 	}
 }
