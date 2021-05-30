@@ -28,6 +28,7 @@ public class Funcionario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	private String nome;
+	private String cpf;
 	private BigDecimal salario;
 	@Column(name = "DATA_NASCIMENTO")
 	private Date dataNascimento;
