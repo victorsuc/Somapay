@@ -7,5 +7,5 @@ import com.somapay.contaBancaria.model.Empresa;
 
 @Repository
 public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
-
+	public boolean existsByCnpj(String cnpj);
 }
