@@ -36,4 +36,9 @@ public class ContaBancariaController {
     public ResponseEntity<SaldoContaBancariaDto> buscarSaldoEmpresa(@RequestParam Long idEmpresa) {
         return new ResponseEntity<SaldoContaBancariaDto>(contaBancariaService.buscarSaldoEmpresaBy(idEmpresa), HttpStatus.OK);
     }
+	
+	@GetMapping(value="/saldo-funcionario")
+    public ResponseEntity<SaldoContaBancariaDto> buscarSaldoFuncionario(@RequestParam Long idFuncionario) {
+        return new ResponseEntity<SaldoContaBancariaDto>(contaBancariaService.buscarSaldoFuncionarioBy(idFuncionario), HttpStatus.OK);
+    }
 }

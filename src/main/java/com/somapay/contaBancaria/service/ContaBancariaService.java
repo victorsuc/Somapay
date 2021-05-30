@@ -44,4 +44,8 @@ public class ContaBancariaService {
 	public SaldoContaBancariaDto buscarSaldoEmpresaBy(long idEmpresa) {
 		return contaBancariaRepository.findByEmpresaId(idEmpresa);
 	}
+	
+	public SaldoContaBancariaDto buscarSaldoFuncionarioBy(long idFuncionario) {
+		return contaBancariaRepository.findByFuncionarioId(idFuncionario);
+	}
 }

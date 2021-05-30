@@ -11,4 +11,5 @@ public interface ContaBancariaRepository extends JpaRepository<ContaBancaria, Lo
 	public boolean existsByEmpresaId(long idEmpresa);
 	public boolean existsByFuncionarioId(long idFuncionario);
 	public SaldoContaBancariaDto findByEmpresaId(long idEmpresa);
+	public SaldoContaBancariaDto findByFuncionarioId(long idFuncionario);
 }
