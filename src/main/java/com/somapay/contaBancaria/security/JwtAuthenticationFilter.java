@@ -14,14 +14,13 @@ import org.springframework.web.filter.GenericFilterBean;
 
 import com.somapay.contaBancaria.service.TokenAuthenticationService;
 
-public class JwtAuthenticationFilter extends GenericFilterBean{
+public class JwtAuthenticationFilter extends GenericFilterBean {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		Authentication authentication = TokenAuthenticationService
-				.getAuthentication((HttpServletRequest) request);
-		
+		Authentication authentication = TokenAuthenticationService.getAuthentication((HttpServletRequest) request);
+
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		chain.doFilter(request, response);
 	}

@@ -1,6 +1,7 @@
 package com.somapay.contaBancaria.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.somapay.contaBancaria.model.Usuario;
@@ -13,6 +14,7 @@ public class UsuarioService {
 	private UsuarioRepository usuarioRepository;
 	
 	public Usuario criarUsuario(Usuario usuario) {
+		usuario.setSenha(new BCryptPasswordEncoder().encode(usuario.getSenha()));
 		return usuarioRepository.save(usuario);
 	}
 }
