@@ -22,7 +22,7 @@ public class UsuarioController {
 	
 	@PostMapping
 	@ApiOperation(value = "Cria um usuário com login e senha para autenticação")
-	public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario){
+	public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario) throws Exception{
 		return new ResponseEntity<Usuario>(usuarioService.criarUsuario(usuario), HttpStatus.CREATED);
 	}
 }

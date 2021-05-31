@@ -13,7 +13,10 @@ public class UsuarioService {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
-	public Usuario criarUsuario(Usuario usuario) {
+	public Usuario criarUsuario(Usuario usuario) throws Exception {
+		if(usuarioRepository.existsByLogin(usuario.getLogin())) {
+			throw new Exception("Usuário já cadastrado");
+		}
 		usuario.setSenha(new BCryptPasswordEncoder().encode(usuario.getSenha()));
 		return usuarioRepository.save(usuario);
 	}

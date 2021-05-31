@@ -8,4 +8,5 @@ import com.somapay.contaBancaria.model.Usuario;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
 	public Usuario findByLogin(String login);
+	public boolean existsByLogin(String login);
 }
