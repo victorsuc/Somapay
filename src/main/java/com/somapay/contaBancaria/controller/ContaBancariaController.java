@@ -33,12 +33,12 @@ public class ContaBancariaController {
     }
 	
 	@GetMapping(value="/saldo-empresa")
-    public ResponseEntity<SaldoContaBancariaDto> buscarSaldoEmpresa(@RequestParam Long idEmpresa) {
+    public ResponseEntity<SaldoContaBancariaDto> buscarSaldoEmpresa(@RequestParam Long idEmpresa) throws Exception {
         return new ResponseEntity<SaldoContaBancariaDto>(contaBancariaService.buscarSaldoEmpresaBy(idEmpresa), HttpStatus.OK);
     }
 	
 	@GetMapping(value="/saldo-funcionario")
-    public ResponseEntity<SaldoContaBancariaDto> buscarSaldoFuncionario(@RequestParam Long idFuncionario) {
+    public ResponseEntity<SaldoContaBancariaDto> buscarSaldoFuncionario(@RequestParam Long idFuncionario) throws Exception {
         return new ResponseEntity<SaldoContaBancariaDto>(contaBancariaService.buscarSaldoFuncionarioBy(idFuncionario), HttpStatus.OK);
     }
 }

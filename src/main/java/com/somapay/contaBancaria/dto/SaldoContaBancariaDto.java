@@ -4,4 +4,5 @@ import java.math.BigDecimal;
 
 public interface SaldoContaBancariaDto {
 	BigDecimal getSaldo();
+	Long getId();
 }

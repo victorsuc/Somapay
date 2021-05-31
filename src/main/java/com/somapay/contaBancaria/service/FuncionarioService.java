@@ -30,7 +30,7 @@ public class FuncionarioService {
 		return funcionarioRepository.findAll();
 	}
 	
-	public List<FuncionarioPagamentoSalarioDto> buscarIdFuncionariosPorEmpresa(Long idEmpresa){
+	public List<FuncionarioPagamentoSalarioDto> buscarIdFuncionariosESalarioPorEmpresa(Long idEmpresa){
 		return funcionarioRepository.findByEmpresaId(idEmpresa);
 	}
 }

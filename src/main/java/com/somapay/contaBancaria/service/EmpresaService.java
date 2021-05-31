@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.somapay.contaBancaria.dto.FuncionarioPagamentoSalarioDto;
 import com.somapay.contaBancaria.dto.SaldoContaBancariaDto;
@@ -38,16 +39,29 @@ public class EmpresaService {
 		return empresaRepository.findAll();
 	}
 
+	@Transactional
 	public void pagarSalarios(Long idEmpresa) throws Exception {
 		List<FuncionarioPagamentoSalarioDto> listaFuncionariosDaEmpresa = funcionarioService
-				.buscarIdFuncionariosPorEmpresa(idEmpresa);
+				.buscarIdFuncionariosESalarioPorEmpresa(idEmpresa);
+		SaldoContaBancariaDto saldoContaEmpresaDto = contaBancariaService.buscarSaldoEmpresaBy(idEmpresa);
 
-		if (verificarSeFolhaDePagamentoMaiorQueSaldoDaEmpresa(idEmpresa, listaFuncionariosDaEmpresa)) {
+		if (verificarSeFolhaDePagamentoSalarialMaiorQueSaldoDaEmpresa(saldoContaEmpresaDto.getSaldo(),
+				listaFuncionariosDaEmpresa)) {
 			throw new Exception("Saldo da empresa insuficiente para pagamento de folha salarial");
+		}
+
+		for (FuncionarioPagamentoSalarioDto funcionario : listaFuncionariosDaEmpresa) {
+			contaBancariaService.debitarValorContaBancariaEmpresa(idEmpresa, funcionario.getSalario());
+			try {
+				contaBancariaService.creditarValorContaBancariaFuncionario(funcionario.getId(),
+						funcionario.getSalario());
+			} catch (Exception e) {
+				contaBancariaService.creditarValorContaBancariaEmpresa(idEmpresa, funcionario.getSalario());
+			}
 		}
 	}
 
-	private boolean verificarSeFolhaDePagamentoMaiorQueSaldoDaEmpresa(Long idEmpresa,
+	private boolean verificarSeFolhaDePagamentoSalarialMaiorQueSaldoDaEmpresa(BigDecimal saldoContaEmpresa,
 			List<FuncionarioPagamentoSalarioDto> listaFuncionariosDaEmpresa) {
 		BigDecimal totalFolhaDaEmpresa = BigDecimal.ZERO;
 
@@ -55,7 +69,6 @@ public class EmpresaService {
 			totalFolhaDaEmpresa = totalFolhaDaEmpresa.add(funcionario.getSalario());
 		}
 
-		SaldoContaBancariaDto saldoContaEmpresaDto = contaBancariaService.buscarSaldoEmpresaBy(idEmpresa);
-		return saldoContaEmpresaDto.getSaldo().compareTo(totalFolhaDaEmpresa) == -1;
+		return saldoContaEmpresa.compareTo(totalFolhaDaEmpresa) == -1;
 	}
 }
