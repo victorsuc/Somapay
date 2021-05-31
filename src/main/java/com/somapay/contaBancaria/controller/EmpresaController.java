@@ -7,8 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.somapay.contaBancaria.model.Empresa;
@@ -22,11 +24,17 @@ public class EmpresaController {
 
 	@PostMapping
 	public ResponseEntity<Empresa> salvar(@RequestBody Empresa empresa) throws Exception {
-		return new ResponseEntity<Empresa>(empresaService.salvar(empresa), HttpStatus.OK);
+		return new ResponseEntity<Empresa>(empresaService.salvar(empresa), HttpStatus.CREATED);
 	}
 	
 	@GetMapping()
     public ResponseEntity<List<Empresa>> buscarEmpresas() {
         return new ResponseEntity<List<Empresa>>(empresaService.buscarTodasEmpresas(), HttpStatus.OK);
     }
+	
+	@PutMapping(value="/pagar-salarios")
+	public HttpStatus pagarSalarioParaFuncionariosDaEmpresa(@RequestParam Long idEmpresa) throws Exception {
+		empresaService.pagarSalarios(idEmpresa);
+		return HttpStatus.OK;
+	}
 }

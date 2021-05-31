@@ -24,7 +24,7 @@ public class ContaBancariaController {
 
 	@PostMapping
 	public ResponseEntity<ContaBancaria> salvar(@RequestBody ContaBancaria contaBancaria) throws Exception {
-		return new ResponseEntity<ContaBancaria>(contaBancariaService.salvar(contaBancaria), HttpStatus.OK);
+		return new ResponseEntity<ContaBancaria>(contaBancariaService.salvar(contaBancaria), HttpStatus.CREATED);
 	}
 	
 	@GetMapping()

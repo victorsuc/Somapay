@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.somapay.contaBancaria.dto.FuncionarioPagamentoSalarioDto;
 import com.somapay.contaBancaria.model.Funcionario;
 import com.somapay.contaBancaria.repository.FuncionarioRepository;
 import com.somapay.contaBancaria.utils.ValidatorUtils;
@@ -27,5 +28,9 @@ public class FuncionarioService {
 	
 	public List<Funcionario> buscarFuncionarios(){
 		return funcionarioRepository.findAll();
+	}
+	
+	public List<FuncionarioPagamentoSalarioDto> buscarIdFuncionariosPorEmpresa(Long idEmpresa){
+		return funcionarioRepository.findByEmpresaId(idEmpresa);
 	}
 }
