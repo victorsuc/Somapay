@@ -51,4 +51,11 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
 		
 		TokenAuthenticationService.addAuthentication(response, auth.getName());
 	}
+	
+	@Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException failed) throws IOException, ServletException {
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                "Autenticação falhou, dados de login incorretos");
+    }
 }
