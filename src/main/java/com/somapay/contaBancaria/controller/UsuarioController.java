@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.somapay.contaBancaria.model.Usuario;
 import com.somapay.contaBancaria.service.UsuarioService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping(path="usuario")
 public class UsuarioController {
@@ -19,6 +21,7 @@ public class UsuarioController {
 	private UsuarioService usuarioService;
 	
 	@PostMapping
+	@ApiOperation(value = "Cria um usuário com login e senha para autenticação")
 	public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario){
 		return new ResponseEntity<Usuario>(usuarioService.criarUsuario(usuario), HttpStatus.CREATED);
 	}

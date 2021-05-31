@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.somapay.contaBancaria.model.Empresa;
 import com.somapay.contaBancaria.service.EmpresaService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping(path="empresa")
 public class EmpresaController {
@@ -24,16 +26,19 @@ public class EmpresaController {
 	private EmpresaService empresaService;
 
 	@PostMapping
+	@ApiOperation(value = "Adiciona uma nova empresa")
 	public ResponseEntity<Empresa> salvar(@RequestBody Empresa empresa) throws Exception {
 		return new ResponseEntity<Empresa>(empresaService.salvar(empresa), HttpStatus.CREATED);
 	}
 	
 	@GetMapping()
+	@ApiOperation(value = "Busca todas as empresas")
     public ResponseEntity<List<Empresa>> buscarEmpresas() {
         return new ResponseEntity<List<Empresa>>(empresaService.buscarTodasEmpresas(), HttpStatus.OK);
     }
 	
 	@PutMapping(value="/pagar-salarios")
+	@ApiOperation(value = "Paga os salários de todos os funcionários da empresa")
 	@Transactional
 	public HttpStatus pagarSalarioParaFuncionariosDaEmpresa(@RequestParam Long idEmpresa) throws Exception {
 		empresaService.pagarSalarios(idEmpresa);

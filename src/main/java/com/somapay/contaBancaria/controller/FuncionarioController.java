@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.somapay.contaBancaria.model.Funcionario;
 import com.somapay.contaBancaria.service.FuncionarioService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping(path="funcionario")
 public class FuncionarioController {
@@ -21,11 +23,13 @@ public class FuncionarioController {
 	private FuncionarioService funcionarioService;
 
 	@PostMapping
+	@ApiOperation(value = "Adiciona um funcionário vinculado à empresa")
 	public ResponseEntity<Funcionario> salvar(@RequestBody Funcionario funcionario) throws Exception {
 		return new ResponseEntity<Funcionario>(funcionarioService.salvar(funcionario), HttpStatus.CREATED);
 	}
 	
 	@GetMapping()
+	@ApiOperation(value = "Busca todos os funcionarios")
     public ResponseEntity<List<Funcionario>> buscarFuncionarios() {
         return new ResponseEntity<List<Funcionario>>(funcionarioService.buscarFuncionarios(), HttpStatus.OK);
     }
