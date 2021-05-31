@@ -25,6 +25,8 @@ public class EmpresaService {
 	@Autowired
 	private ContaBancariaService contaBancariaService;
 
+	private static final BigDecimal valorTarifaPagamentoFolha = BigDecimal.valueOf(0.0038);
+
 	public Empresa salvar(Empresa empresa) throws Exception {
 		if (!ValidatorUtils.verificarSeCnpjValido(empresa.getCnpj())) {
 			throw new Exception("Número de CNPJ inválido");
@@ -51,7 +53,8 @@ public class EmpresaService {
 		}
 
 		for (FuncionarioPagamentoSalarioDto funcionario : listaFuncionariosDaEmpresa) {
-			contaBancariaService.debitarValorContaBancariaEmpresa(idEmpresa, funcionario.getSalario());
+			contaBancariaService.debitarValorContaBancariaEmpresa(idEmpresa,
+					funcionario.getSalario().add(funcionario.getSalario().multiply(valorTarifaPagamentoFolha)));
 			try {
 				contaBancariaService.creditarValorContaBancariaFuncionario(funcionario.getId(),
 						funcionario.getSalario());
@@ -66,7 +69,7 @@ public class EmpresaService {
 		BigDecimal totalFolhaDaEmpresa = BigDecimal.ZERO;
 
 		for (FuncionarioPagamentoSalarioDto funcionario : listaFuncionariosDaEmpresa) {
-			totalFolhaDaEmpresa = totalFolhaDaEmpresa.add(funcionario.getSalario());
+			totalFolhaDaEmpresa = totalFolhaDaEmpresa.add(funcionario.getSalario().multiply(valorTarifaPagamentoFolha));
 		}
 
 		return saldoContaEmpresa.compareTo(totalFolhaDaEmpresa) == -1;
