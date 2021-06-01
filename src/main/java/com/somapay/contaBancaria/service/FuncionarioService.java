@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.somapay.contaBancaria.dto.FuncionarioPagamentoSalarioDto;
+import com.somapay.contaBancaria.exceptions.CpfInvalidoException;
+import com.somapay.contaBancaria.exceptions.RegistroJaExistenteException;
 import com.somapay.contaBancaria.model.Funcionario;
 import com.somapay.contaBancaria.repository.FuncionarioRepository;
 import com.somapay.contaBancaria.utils.ValidatorUtils;
@@ -16,12 +18,12 @@ public class FuncionarioService {
 	@Autowired
 	private FuncionarioRepository funcionarioRepository;
 	
-	public Funcionario salvar(Funcionario funcionario) throws Exception {
+	public Funcionario salvar(Funcionario funcionario) {
 		if(!ValidatorUtils.verificarSeCpfValido(funcionario.getCpf())) {
-			throw new Exception("Número de CPF inválido");
+			throw new CpfInvalidoException("Número de CPF inválido");
 		}
 		if(funcionarioRepository.existsByCpfAndEmpresaId(funcionario.getCpf(), funcionario.getEmpresa().getId())) {
-			throw new Exception("Funcionário já cadastrado para esta empresa");
+			throw new RegistroJaExistenteException("Funcionário com este cpf já cadastrado para esta empresa");
 		}
 		return funcionarioRepository.save(funcionario);
 	}

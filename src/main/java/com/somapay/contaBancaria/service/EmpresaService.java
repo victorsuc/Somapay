@@ -9,6 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.somapay.contaBancaria.dto.FuncionarioPagamentoSalarioDto;
 import com.somapay.contaBancaria.dto.SaldoContaBancariaDto;
+import com.somapay.contaBancaria.exceptions.CnpjInvalidoException;
+import com.somapay.contaBancaria.exceptions.RegistroJaExistenteException;
+import com.somapay.contaBancaria.exceptions.RegistroNaoEncontradoException;
+import com.somapay.contaBancaria.exceptions.SaldoInsuficienteException;
 import com.somapay.contaBancaria.model.Empresa;
 import com.somapay.contaBancaria.repository.EmpresaRepository;
 import com.somapay.contaBancaria.utils.ValidatorUtils;
@@ -27,12 +31,12 @@ public class EmpresaService {
 
 	private static final BigDecimal valorTarifaPagamentoFolha = BigDecimal.valueOf(0.0038);
 
-	public Empresa salvar(Empresa empresa) throws Exception {
+	public Empresa salvar(Empresa empresa) {
 		if (!ValidatorUtils.verificarSeCnpjValido(empresa.getCnpj())) {
-			throw new Exception("Número de CNPJ inválido");
+			throw new CnpjInvalidoException("Número de CNPJ inválido");
 		}
 		if (empresaRepository.existsByCnpj(empresa.getCnpj())) {
-			throw new Exception("Empresa já cadastrada");
+			throw new RegistroJaExistenteException("Empresa com este cnpj já cadastrada");
 		}
 		return empresaRepository.save(empresa);
 	}
@@ -42,14 +46,14 @@ public class EmpresaService {
 	}
 
 	@Transactional
-	public void pagarSalarios(Long idEmpresa) throws Exception {
+	public void pagarSalarios(Long idEmpresa) {
 		List<FuncionarioPagamentoSalarioDto> listaFuncionariosDaEmpresa = funcionarioService
 				.buscarIdFuncionariosESalarioPorEmpresa(idEmpresa);
 		SaldoContaBancariaDto saldoContaEmpresaDto = contaBancariaService.buscarSaldoEmpresaBy(idEmpresa);
 
 		if (verificarSeFolhaDePagamentoSalarialMaiorQueSaldoDaEmpresa(saldoContaEmpresaDto.getSaldo(),
 				listaFuncionariosDaEmpresa)) {
-			throw new Exception("Saldo da empresa insuficiente para pagamento de folha salarial");
+			throw new SaldoInsuficienteException("Saldo da empresa insuficiente para pagamento de folha salarial");
 		}
 
 		for (FuncionarioPagamentoSalarioDto funcionario : listaFuncionariosDaEmpresa) {
@@ -58,8 +62,9 @@ public class EmpresaService {
 			try {
 				contaBancariaService.creditarValorContaBancariaFuncionario(funcionario.getId(),
 						funcionario.getSalario());
-			} catch (Exception e) {
+			} catch (RegistroNaoEncontradoException e) {
 				contaBancariaService.creditarValorContaBancariaEmpresa(idEmpresa, funcionario.getSalario());
+				throw new RegistroNaoEncontradoException(e.getMessage(), e);
 			}
 		}
 	}
