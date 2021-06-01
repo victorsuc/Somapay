@@ -8,21 +8,26 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.somapay.contaBancaria.exceptions.RegistroJaExistenteException;
 import com.somapay.contaBancaria.model.Usuario;
 import com.somapay.contaBancaria.service.UsuarioService;
 
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(path="usuario")
+@RequestMapping(path = "usuario")
 public class UsuarioController {
-	
+
 	@Autowired
 	private UsuarioService usuarioService;
-	
+
 	@PostMapping
 	@ApiOperation(value = "Cria um usuário com login e senha para autenticação")
-	public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario) throws Exception{
-		return new ResponseEntity<Usuario>(usuarioService.criarUsuario(usuario), HttpStatus.CREATED);
+	public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario) {
+		try {
+			return new ResponseEntity<Usuario>(usuarioService.criarUsuario(usuario), HttpStatus.CREATED);
+		} catch (RegistroJaExistenteException e) {
+			throw e;
+		}
 	}
 }

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.somapay.contaBancaria.exceptions.RegistroNaoEncontradoException;
+import com.somapay.contaBancaria.exceptions.SaldoInsuficienteException;
 import com.somapay.contaBancaria.model.Empresa;
 import com.somapay.contaBancaria.service.EmpresaService;
 
@@ -27,7 +29,7 @@ public class EmpresaController {
 
 	@PostMapping
 	@ApiOperation(value = "Adiciona uma nova empresa")
-	public ResponseEntity<Empresa> salvar(@RequestBody Empresa empresa) throws Exception {
+	public ResponseEntity<Empresa> salvar(@RequestBody Empresa empresa) {
 		return new ResponseEntity<Empresa>(empresaService.salvar(empresa), HttpStatus.CREATED);
 	}
 	
@@ -40,8 +42,14 @@ public class EmpresaController {
 	@PutMapping(value="/pagar-salarios")
 	@ApiOperation(value = "Paga os salários de todos os funcionários da empresa")
 	@Transactional
-	public HttpStatus pagarSalarioParaFuncionariosDaEmpresa(@RequestParam Long idEmpresa) throws Exception {
-		empresaService.pagarSalarios(idEmpresa);
+	public HttpStatus pagarSalarioParaFuncionariosDaEmpresa(@RequestParam Long idEmpresa) {
+		try {
+			empresaService.pagarSalarios(idEmpresa);			
+		} catch (RegistroNaoEncontradoException e) {
+			throw e;
+		} catch (SaldoInsuficienteException e) {
+			throw e;
+		}
 		return HttpStatus.OK;
 	}
 }

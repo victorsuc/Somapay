@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.somapay.contaBancaria.dto.SaldoContaBancariaDto;
+import com.somapay.contaBancaria.exceptions.RegistroNaoEncontradoException;
 import com.somapay.contaBancaria.model.ContaBancaria;
 import com.somapay.contaBancaria.repository.ContaBancariaRepository;
 
@@ -42,39 +43,39 @@ public class ContaBancariaService {
 		return contaBancariaRepository.findAll();
 	}
 	
-	public SaldoContaBancariaDto buscarSaldoEmpresaBy(long idEmpresa) throws Exception {
+	public SaldoContaBancariaDto buscarSaldoEmpresaBy(long idEmpresa) {
 		SaldoContaBancariaDto saldoContaEmpresaDto = contaBancariaRepository.findByEmpresaId(idEmpresa);
 		if(saldoContaEmpresaDto == null) {
-			throw new Exception("Empresa não possui conta bancária");
+			throw new RegistroNaoEncontradoException("Empresa não possui conta bancária");
 		}
 		
 		return saldoContaEmpresaDto;
 	}
 	
-	public SaldoContaBancariaDto buscarSaldoFuncionarioBy(long idFuncionario) throws Exception {
+	public SaldoContaBancariaDto buscarSaldoFuncionarioBy(long idFuncionario) {
 		SaldoContaBancariaDto saldoContaFuncionarioDto = contaBancariaRepository.findByFuncionarioId(idFuncionario);
 		if(saldoContaFuncionarioDto == null) {
-			throw new Exception("Funcionário não possui conta bancária");
+			throw new RegistroNaoEncontradoException("Funcionário não possui conta bancária");
 		}
 		
 		return saldoContaFuncionarioDto;
 	}
 	@Transactional
-	public void debitarValorContaBancariaEmpresa(Long idEmpresa, BigDecimal valor) throws Exception {
+	public void debitarValorContaBancariaEmpresa(Long idEmpresa, BigDecimal valor) {
 		SaldoContaBancariaDto saldoContaEmpresaDto = buscarSaldoEmpresaBy(idEmpresa);
 		BigDecimal novoSaldo = saldoContaEmpresaDto.getSaldo().subtract(valor);
 
 		contaBancariaRepository.alterarSaldoContaBancaria(saldoContaEmpresaDto.getId(), novoSaldo);
 	}
 	@Transactional
-	public void creditarValorContaBancariaEmpresa(Long idEmpresa, BigDecimal valor) throws Exception {
+	public void creditarValorContaBancariaEmpresa(Long idEmpresa, BigDecimal valor) {
 		SaldoContaBancariaDto saldoContaEmpresaDto = buscarSaldoEmpresaBy(idEmpresa);
 		BigDecimal novoSaldo = saldoContaEmpresaDto.getSaldo().add(valor);
 		
 		contaBancariaRepository.alterarSaldoContaBancaria(saldoContaEmpresaDto.getId(), novoSaldo);
 	}
 	@Transactional
-	public void creditarValorContaBancariaFuncionario(Long idFuncionario, BigDecimal valor) throws Exception{
+	public void creditarValorContaBancariaFuncionario(Long idFuncionario, BigDecimal valor) {
 		SaldoContaBancariaDto saldoContaFuncionarioDto = buscarSaldoFuncionarioBy(idFuncionario);
 		BigDecimal novoSaldo = saldoContaFuncionarioDto.getSaldo().add(valor);
 
